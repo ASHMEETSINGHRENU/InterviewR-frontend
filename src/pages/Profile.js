@@ -20,7 +20,7 @@ function Profile() {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/auth/profile/${userId}`)
+    axios.get(`https://interviewr-backend.onrender.com/api/auth/profile/${userId}`)
       .then(res => {
         setFormData({
           ...formData,
@@ -30,7 +30,7 @@ function Profile() {
           age: res.data.age
         });
         if (res.data.profileImage) {
-          setImagePreview(`http://localhost:5000/${res.data.profileImage}`);
+          setImagePreview(`https://interviewr-backend.onrender.com/${res.data.profileImage}`);
         }
       })
       .catch(error => {

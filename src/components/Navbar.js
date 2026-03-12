@@ -15,7 +15,7 @@ function Navbar() {
   useEffect(() => {
     if (userId) {
       axios
-        .get(`http://localhost:5000/api/auth/profile/${userId}`)
+        .get(`https://interviewr-backend.onrender.com/api/auth/profile/${userId}`)
         .then((res) => setUser(res.data))
         .catch((err) => console.log(err));
     }
@@ -105,7 +105,7 @@ const handleLogout = () => {
                       <img
                         src={
                           user.profileImage
-                            ? `http://localhost:5000/uploads/${user.profileImage}`
+                            ? `https://interviewr-backend.onrender.com/uploads/${user.profileImage}`
                             : `https://ui-avatars.com/api/?name=${user.fullName}&background=6366f1&color=fff&bold=true`
                         }
                         alt={user.fullName}
@@ -169,7 +169,7 @@ const handleLogout = () => {
                   <img
                     src={
                       user.profileImage
-                        ? `http://localhost:5000/uploads/${user.profileImage}`
+                        ? `https://interviewr-backend.onrender.com/uploads/${user.profileImage}`
                         : `https://ui-avatars.com/api/?name=${user.fullName}&background=6366f1&color=fff&bold=true`
                     }
                     alt={user.fullName}
