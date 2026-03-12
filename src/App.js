@@ -6,7 +6,7 @@ import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
 import CategoryPage from "./pages/CategoryPage";
 import AdminUpload from "./pages/AdminUpload";
-import AdminRegister from "./pages/Admin_register";
+// import AdminRegister from "./pages/Admin_register";
 import AdminLogin from "./pages/Admin_login";
 import Forms from "./pages/forms";
 import About from "./pages/about";
@@ -20,8 +20,8 @@ function App() {
         {/* PUBLIC ROUTES */}
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/admin-register" element={<AdminRegister />} />
-        <Route path="/admin-login" element={<AdminLogin />} />
+        {/* <Route path="/admin-register" element={<AdminRegister />} /> */}
+        <Route path="/ASH2002_admin-login" element={<AdminLogin />} />
 
         {/* PROTECTED ROUTES */}
         <Route

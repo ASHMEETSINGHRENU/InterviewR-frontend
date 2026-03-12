@@ -19,7 +19,7 @@ function AdminLogin() {
       localStorage.setItem("adminToken", res.data.token);
       alert("Admin Login Successful");
 
-      navigate("/demo");
+      navigate("/admin-upload");
 
     } catch (error) {
       alert(error.response?.data?.message || "Login Failed");
