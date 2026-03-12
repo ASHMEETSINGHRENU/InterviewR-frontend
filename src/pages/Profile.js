@@ -130,7 +130,7 @@ function Profile() {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/auth/profile/${userId}`,
+        `interviewr-backend.onrender.com/api/auth/profile/${userId}`,
         data,
         {
           headers: {

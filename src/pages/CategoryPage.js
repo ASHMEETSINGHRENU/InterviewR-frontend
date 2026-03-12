@@ -25,7 +25,7 @@ function CategoryPage() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/questions/${category}`)
+      .get(`interviewr-backend.onrender.com/api/questions/${category}`)
       .then((res) => {
         setQuestions(res.data);
       });
