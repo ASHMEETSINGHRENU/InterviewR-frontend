@@ -125,7 +125,7 @@ function Register() {
 
     try {
       await axios.post(
-        "interviewr-backend.onrender.com/api/auth/register",
+        "https://interviewr-backend.onrender.com/api/auth/register",
         formData
       );
 
