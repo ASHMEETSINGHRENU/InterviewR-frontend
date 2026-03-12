@@ -22,7 +22,7 @@ function AdminRegister() {
 
     try {
       await axios.post(
-        "interviewr-backend.onrender.com/api/auth/admin/register",
+        "https://interviewr-backend.onrender.com/api/auth/admin/register",
         formData
       );
 

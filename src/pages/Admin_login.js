@@ -12,7 +12,7 @@ function AdminLogin() {
 
     try {
       const res = await axios.post(
-        "interviewr-backend.onrender.com/api/auth/admin/login",
+        "https://interviewr-backend.onrender.com/api/auth/admin/login",
         { password }
       );
 

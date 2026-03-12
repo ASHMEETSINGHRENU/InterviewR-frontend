@@ -131,7 +131,7 @@ useEffect(() => {
 
     try {
       await axios.put(
-        `interviewr-backend.onrender.com/api/auth/profile/${userId}`,
+        `https://interviewr-backend.onrender.com/api/auth/profile/${userId}`,
         data,
         {
           headers: {

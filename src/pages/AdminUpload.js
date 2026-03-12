@@ -21,7 +21,7 @@ e.preventDefault();
 try{
 
 const res = await axios.post(
-"interviewr-backend.onrender.com/api/questions/add-question",
+"https://interviewr-backend.onrender.com/api/questions/add-question",
 {category,question,answer}
 );
 
@@ -45,7 +45,7 @@ setSelectedCategory(cat);
 try{
 
 const res = await axios.get(
-`interviewr-backend.onrender.com/api/questions/${cat}`
+`https://interviewr-backend.onrender.com/api/questions/${cat}`
 );
 
 setQuestions(res.data);
@@ -60,7 +60,7 @@ console.log(err);
 const deleteQuestion = async(id)=>{
 
 await axios.delete(
-`interviewr-backend.onrender.com/api/questions/delete/${id}`
+`https://interviewr-backend.onrender.com/api/questions/delete/${id}`
 );
 
 setQuestions(questions.filter(q=>q._id !== id));
@@ -80,7 +80,7 @@ setEditAnswer(q.answer);
 const updateQuestion = async ()=>{
 
 await axios.put(
-`interviewr-backend.onrender.com/api/questions/update/${editId}`,
+`https://interviewr-backend.onrender.com/api/questions/update/${editId}`,
 {
 question:editQuestion,
 answer:editAnswer

@@ -88,7 +88,7 @@ const Forms = () => {
     setLoading(true);
 
     try {
-      await axios.post("interviewr-backend.onrender.com/api/forms/submit", formData);
+      await axios.post("https://interviewr-backend.onrender.com/api/forms/submit", formData);
       
       setLoading(false);
       setShowSuccessModal(true);

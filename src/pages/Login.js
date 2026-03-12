@@ -73,21 +73,16 @@ function Login() {
       setLoading(true);
 
       const res = await axios.post(
-        "interviewr-backend.onrender.com/api/auth/login",
+        "https://interviewr-backend.onrender.com/api/auth/login",
         formData
       );
 
       const { token, user } = res.data;
-
-      // Save authentication data
-      localStorage.setItem("token", token);
+     localStorage.setItem("token", token);
       localStorage.setItem("userId", user?.id);
 
-      // Set axios default header
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      // Show success message
-      // You can replace this with a toast notification later
       alert("✅ Login Successful! Welcome to InterviewReady.");
       navigate("/home");
     } catch (error) {
