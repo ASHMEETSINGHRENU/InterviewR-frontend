@@ -19,24 +19,25 @@ function Profile() {
   const [showPasswordFields, setShowPasswordFields] = useState(false);
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    axios.get(`https://interviewr-backend.onrender.com/api/auth/profile/${userId}`)
-      .then(res => {
-        setFormData({
-          ...formData,
-          fullName: res.data.fullName,
-          email: res.data.email,
-          phone: res.data.phone,
-          age: res.data.age
-        });
-        if (res.data.profileImage) {
-          setImagePreview(`https://interviewr-backend.onrender.com/${res.data.profileImage}`);
-        }
-      })
-      .catch(error => {
-        console.error("Error fetching profile:", error);
-      });
-  }, []);
+useEffect(() => {
+  axios.get(`https://interviewr-backend.onrender.com/api/auth/profile/${userId}`)
+    .then(res => {
+      setFormData(prev => ({
+        ...prev,
+        fullName: res.data.fullName,
+        email: res.data.email,
+        phone: res.data.phone,
+        age: res.data.age
+      }));
+
+      if (res.data.profileImage) {
+        setImagePreview(`https://interviewr-backend.onrender.com/${res.data.profileImage}`);
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching profile:", error);
+    });
+}, [userId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
