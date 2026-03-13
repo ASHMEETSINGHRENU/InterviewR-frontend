@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 /* BACKGROUND IMAGES */
 import jsBg from "../photos/js.jpg";
@@ -293,6 +294,7 @@ function CategoryPage() {
           </div>
         </div>
       </div>
+       <Footer />
     </>
   );
 }
