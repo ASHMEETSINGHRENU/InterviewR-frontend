@@ -31,7 +31,8 @@ useEffect(() => {
       }));
 
       if (res.data.profileImage) {
-        setImagePreview(`https://interviewr-backend.onrender.com/${res.data.profileImage}`);
+        // setImagePreview(`https://interviewr-backend.onrender.com/${res.data.profileImage}`);
+        setImagePreview(`${process.env.REACT_APP_API_URL}/${res.data.profileImage}`);
       }
     })
     .catch(error => {
