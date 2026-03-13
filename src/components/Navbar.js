@@ -91,7 +91,8 @@ const handleLogout = () => {
                   )}
                 </button>
 
-                <button
+               {/* Contact Link */}
+<button
   onClick={() => handleNavigation("/contact")}
   className={`relative px-4 py-2 rounded-xl transition-all duration-300 group ${
     isActive("/contact")
@@ -100,14 +101,15 @@ const handleLogout = () => {
   }`}
 >
   <span className="flex items-center space-x-2">
-    <Contact className="w-4 h-4" /> {/* Make sure you have a Contact icon imported */}
+    <Contact className="w-4 h-4" />
     <span>Contact</span>
   </span>
-  {isActive("/forms") && (
+  {isActive("/contact") && (
     <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></div>
   )}
 </button>
 
+{/* About Us Link */}
 <button
   onClick={() => handleNavigation("/about")}
   className={`relative px-4 py-2 rounded-xl transition-all duration-300 group ${
@@ -117,7 +119,7 @@ const handleLogout = () => {
   }`}
 >
   <span className="flex items-center space-x-2">
-    <Info className="w-4 h-4" /> {/* Make sure you have an Info icon imported */}
+    <Info className="w-4 h-4" />
     <span>About Us</span>
   </span>
   {isActive("/about") && (
@@ -250,6 +252,47 @@ const handleLogout = () => {
                   <User className="w-4 h-4" />
                   <span className="text-sm font-medium">Profile</span>
                 </button>
+
+
+ <button
+    onClick={() => handleNavigation("/contact")}
+    className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
+      isActive("/contact")
+        ? "bg-blue-50 text-blue-600"
+        : "text-gray-600 hover:bg-gray-50"
+    }`}
+  >
+    <Contact className="w-4 h-4" />
+    <span className="text-sm font-medium">Contact</span>
+  </button>
+
+  {/* Add About to mobile menu */}
+  <button
+    onClick={() => handleNavigation("/about")}
+    className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
+      isActive("/about")
+        ? "bg-blue-50 text-blue-600"
+        : "text-gray-600 hover:bg-gray-50"
+    }`}
+  >
+    <Info className="w-4 h-4" />
+    <span className="text-sm font-medium">About Us</span>
+  </button>
+
+  <button
+    onClick={() => handleNavigation("/profile")}
+    className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
+      isActive("/profile")
+        ? "bg-purple-50 text-purple-600"
+        : "text-gray-600 hover:bg-gray-50"
+    }`}
+  >
+    <User className="w-4 h-4" />
+    <span className="text-sm font-medium">Profile</span>
+  </button>
+
+
+
 
                 <button
                   onClick={handleLogout}
