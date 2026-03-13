@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { LogOut, Home, Contact, Info } from "lucide-react";
+import { LogOut, Home, User, Menu, X, Contact, Info } from "lucide-react";
 
 function Navbar() {
   const navigate = useNavigate();
