@@ -93,9 +93,9 @@ const handleLogout = () => {
 
                {/* Contact Link */}
 <button
-  onClick={() => handleNavigation("/contact")}
+  onClick={() => handleNavigation("/forms")}
   className={`relative px-4 py-2 rounded-xl transition-all duration-300 group ${
-    isActive("/contact")
+    isActive("/forms")
       ? "text-blue-600 bg-blue-50"
       : "text-gray-600 hover:text-blue-600 hover:bg-blue-50/50"
   }`}
@@ -104,7 +104,7 @@ const handleLogout = () => {
     <Contact className="w-4 h-4" />
     <span>Contact</span>
   </span>
-  {isActive("/contact") && (
+  {isActive("/forms") && (
     <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></div>
   )}
 </button>
