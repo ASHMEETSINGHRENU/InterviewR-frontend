@@ -348,7 +348,7 @@ function Home() {
         {/* Quick Access Section */}
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
 
-  <Link to="/mongoDB">
+  <Link to="/mongodb">
     <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl text-center hover:scale-105 transition">
       <Database className="w-8 h-8 text-green-600 mx-auto mb-2" />
       <div className="text-xl font-bold text-green-700">Database</div>
@@ -372,7 +372,7 @@ function Home() {
     </div>
   </Link>
 
-  <Link to="/hr">
+  <Link to="/human_resources">
     <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-6 rounded-xl text-center hover:scale-105 transition">
       <Users className="w-8 h-8 text-pink-600 mx-auto mb-2" />
       <div className="text-xl font-bold text-pink-700">HR</div>
