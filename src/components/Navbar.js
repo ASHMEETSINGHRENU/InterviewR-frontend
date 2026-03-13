@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { LogOut, Home, User, Menu, X } from "lucide-react";
+import { LogOut, Home, Contact, Info } from "lucide-react";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -90,6 +90,48 @@ const handleLogout = () => {
                     <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></div>
                   )}
                 </button>
+
+                <button
+  onClick={() => handleNavigation("/contact")}
+  className={`relative px-4 py-2 rounded-xl transition-all duration-300 group ${
+    isActive("/contact")
+      ? "text-blue-600 bg-blue-50"
+      : "text-gray-600 hover:text-blue-600 hover:bg-blue-50/50"
+  }`}
+>
+  <span className="flex items-center space-x-2">
+    <Contact className="w-4 h-4" /> {/* Make sure you have a Contact icon imported */}
+    <span>Contact</span>
+  </span>
+  {isActive("/forms") && (
+    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></div>
+  )}
+</button>
+
+<button
+  onClick={() => handleNavigation("/about")}
+  className={`relative px-4 py-2 rounded-xl transition-all duration-300 group ${
+    isActive("/about")
+      ? "text-blue-600 bg-blue-50"
+      : "text-gray-600 hover:text-blue-600 hover:bg-blue-50/50"
+  }`}
+>
+  <span className="flex items-center space-x-2">
+    <Info className="w-4 h-4" /> {/* Make sure you have an Info icon imported */}
+    <span>About Us</span>
+  </span>
+  {isActive("/about") && (
+    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></div>
+  )}
+</button>
+
+
+
+
+
+
+
+
 
                 {/* Profile Dropdown/Button */}
                 <div className="relative group">
