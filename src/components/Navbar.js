@@ -241,23 +241,12 @@ const handleLogout = () => {
                   <span className="text-sm font-medium">Home</span>
                 </button>
 
-                <button
-                  onClick={() => handleNavigation("/profile")}
-                  className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
-                    isActive("/profile")
-                      ? "bg-purple-50 text-purple-600"
-                      : "text-gray-600 hover:bg-gray-50"
-                  }`}
-                >
-                  <User className="w-4 h-4" />
-                  <span className="text-sm font-medium">Profile</span>
-                </button>
 
 
  <button
-    onClick={() => handleNavigation("/contact")}
+    onClick={() => handleNavigation("/forms")}
     className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
-      isActive("/contact")
+      isActive("/forms")
         ? "bg-blue-50 text-blue-600"
         : "text-gray-600 hover:bg-gray-50"
     }`}
