@@ -372,7 +372,7 @@ function Home() {
     </div>
   </Link>
 
-  <Link to="/HR">
+  <Link to="/hr">
     <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-6 rounded-xl text-center hover:scale-105 transition">
       <Users className="w-8 h-8 text-pink-600 mx-auto mb-2" />
       <div className="text-xl font-bold text-pink-700">HR</div>
