@@ -134,7 +134,7 @@ className="w-full border p-3 rounded"
 <option value="dsa">DSA</option>
 <option value="ml">ML</option>
 <option value="python">Python</option>
-<option value="human_resources">HR</option>
+<option value="HR">HR</option>
 <option value="AI">AI</option>
 
 </select>
@@ -179,7 +179,7 @@ Manage Questions
 <button onClick={()=>loadQuestions("mongodb")} className="bg-blue-600 text-white p-2 rounded">MongoDB</button>
 <button onClick={()=>loadQuestions("mysql")} className="bg-blue-600 text-white p-2 rounded">MySQL</button>
 <button onClick={()=>loadQuestions("python")} className="bg-blue-600 text-white p-2 rounded">Python</button>
-<button onClick={()=>loadQuestions("human_resources")} className="bg-blue-600 text-white p-2 rounded">HR</button>
+<button onClick={()=>loadQuestions("HR")} className="bg-blue-600 text-white p-2 rounded">HR</button>
 <button onClick={()=>loadQuestions("html")} className="bg-blue-600 text-white p-2 rounded">HTML</button>
 <button onClick={()=>loadQuestions("css")} className="bg-blue-600 text-white p-2 rounded">CSS</button>
 <button onClick={()=>loadQuestions("ml")} className="bg-blue-600 text-white p-2 rounded">ML</button>
