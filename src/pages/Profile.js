@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import defaultProfilePic from "../photos/defaultPic.jpg";
 
 function Profile() {
   const userId = localStorage.getItem("userId");
@@ -30,10 +31,11 @@ useEffect(() => {
         age: res.data.age
       }));
 
-      if (res.data.profileImage) {
-        // setImagePreview(`https://interviewr-backend.onrender.com/${res.data.profileImage}`);
-        setImagePreview(`${process.env.REACT_APP_API_URL}/${res.data.profileImage}`);
-      }
+   if (res.data.profileImage) {
+  setImagePreview(`${process.env.REACT_APP_API_URL}/${res.data.profileImage}`);
+} else {
+  setImagePreview(defaultProfilePic);
+}
     })
     .catch(error => {
       console.error("Error fetching profile:", error);
@@ -192,12 +194,13 @@ useEffect(() => {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-blue-400 to-purple-400 flex items-center justify-center">
-                      <span className="text-4xl text-white font-bold">
-                        {formData.fullName ? formData.fullName.charAt(0).toUpperCase() : 'U'}
-                      </span>
-                    </div>
+                    <img 
+                      src={defaultProfilePic}
+                      alt="Default Profile"
+                      className="w-full h-full object-cover"
+                    />
                   )}
+                
                 </div>
                 <label 
                   htmlFor="profile-image" 

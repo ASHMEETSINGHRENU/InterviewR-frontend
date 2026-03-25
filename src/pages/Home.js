@@ -107,7 +107,7 @@ function Home() {
     <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
       
       <Link
-        to="/htmlcss"
+        to="/html"
         className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 shadow-lg w-full sm:w-auto"
       >
         <BookOpen className="w-5 h-5" />
@@ -136,7 +136,7 @@ function Home() {
         <div className="mb-16">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-900">Popular Interview Topics</h2>
-            <Link to="/htmlcss" className="text-blue-600 hover:text-blue-800 flex items-center gap-1">
+            <Link to="/html" className="text-blue-600 hover:text-blue-800 flex items-center gap-1">
               View all <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
