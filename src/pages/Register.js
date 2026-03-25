@@ -6,6 +6,7 @@ import { User, Mail, Phone, Calendar, Lock, Briefcase } from "lucide-react";
 // Import the image
 import registerImage from "../photos/regis_img.jpg";
 
+
 function Register() {
   const navigate = useNavigate();
 
@@ -111,6 +112,8 @@ function Register() {
     return Object.keys(newErrors).length === 0;
   };
 
+
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -122,7 +125,7 @@ function Register() {
       }
       return;
     }
-
+      setLoading(true); 
     try {
       await axios.post(
         "https://interviewr-backend.onrender.com/api/auth/register",
@@ -134,7 +137,10 @@ function Register() {
 
     } catch (error) {
       alert(error.response?.data?.message || "Registration Failed");
-    }
+    } finally {
+    setLoading(false);  // Add this line to stop loading regardless of success/failure
+  }
+
   };
 
   return (
