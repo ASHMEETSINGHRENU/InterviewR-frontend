@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import defaultProfilePic from "../photos/defaultPic.jpg";
+import defaultProfilePic from "../photos/defaultPic.jpg"; // Adjust the path based on your folder structure
 
 function Profile() {
   const userId = localStorage.getItem("userId");
@@ -20,27 +20,31 @@ function Profile() {
   const [showPasswordFields, setShowPasswordFields] = useState(false);
   const [errors, setErrors] = useState({});
 
-useEffect(() => {
-  axios.get(`https://interviewr-backend.onrender.com/api/auth/profile/${userId}`)
-    .then(res => {
-      setFormData(prev => ({
-        ...prev,
-        fullName: res.data.fullName,
-        email: res.data.email,
-        phone: res.data.phone,
-        age: res.data.age
-      }));
+  useEffect(() => {
+    axios.get(`https://interviewr-backend.onrender.com/api/auth/profile/${userId}`)
+      .then(res => {
+        setFormData(prev => ({
+          ...prev,
+          fullName: res.data.fullName,
+          email: res.data.email,
+          phone: res.data.phone,
+          age: res.data.age
+        }));
 
-   if (res.data.profileImage) {
-  setImagePreview(`${process.env.REACT_APP_API_URL}/${res.data.profileImage}`);
-} else {
-  setImagePreview(defaultProfilePic);
-}
-    })
-    .catch(error => {
-      console.error("Error fetching profile:", error);
-    });
-}, [userId]);
+        if (res.data.profileImage) {
+          // If user has a custom profile image, show it
+          setImagePreview(`${process.env.REACT_APP_API_URL}/${res.data.profileImage}`);
+        } else {
+          // If no custom image, show default profile picture
+          setImagePreview(defaultProfilePic);
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching profile:", error);
+        // Even if there's an error fetching profile, set default image
+        setImagePreview(defaultProfilePic);
+      });
+  }, [userId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -200,7 +204,6 @@ useEffect(() => {
                       className="w-full h-full object-cover"
                     />
                   )}
-                
                 </div>
                 <label 
                   htmlFor="profile-image" 
