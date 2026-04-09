@@ -23,7 +23,6 @@ import {
   Star,
   ArrowRight,
   Play,
-  Award,
   TrendingUp,
   Layers,
   Shield,
@@ -255,7 +254,7 @@ function Home() {
         </div>
 
         {/* Categories Grid with Enhanced Animations */}
-        
+
 <div ref={categoriesRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16 scroll-mt-20">
   
   {/* Frontend Card - Image Right */}
