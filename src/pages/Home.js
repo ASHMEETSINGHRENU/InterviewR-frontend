@@ -34,7 +34,7 @@ import Footer from "../components/Footer";
 function Home() {
   const navigate = useNavigate();
   const categoriesRef = useRef(null);
-  // const [hoveredCard, setHoveredCard] = useState(null);
+  const [hoveredCard, setHoveredCard] = useState(null);
   const [scrolled, setScrolled] = useState(false);
   const [animateNumbers, setAnimateNumbers] = useState(false);
 
