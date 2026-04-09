@@ -34,7 +34,6 @@ import Footer from "../components/Footer";
 function Home() {
   const navigate = useNavigate();
   const categoriesRef = useRef(null);
-  const [hoveredCard, setHoveredCard] = useState(null);
   const [scrolled, setScrolled] = useState(false);
   const [animateNumbers, setAnimateNumbers] = useState(false);
 
@@ -52,7 +51,7 @@ function Home() {
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, []); // Removed animateNumbers dependency
 
   const scrollToCategories = () => {
     categoriesRef.current?.scrollIntoView({ 
@@ -127,6 +126,49 @@ function Home() {
     return <>{count}{suffix}</>;
   };
 
+  // Color mapping for dynamic classes
+  const getColorClass = (color, type) => {
+    const colorMap = {
+      green: {
+        bg: "bg-green-500",
+        gradient: "from-green-500 to-green-600",
+        light: "from-green-50 to-green-100",
+        text: "text-green-600"
+      },
+      purple: {
+        bg: "bg-purple-500",
+        gradient: "from-purple-500 to-purple-600",
+        light: "from-purple-50 to-purple-100",
+        text: "text-purple-600"
+      },
+      orange: {
+        bg: "bg-orange-500",
+        gradient: "from-orange-500 to-orange-600",
+        light: "from-orange-50 to-orange-100",
+        text: "text-orange-600"
+      },
+      pink: {
+        bg: "bg-pink-500",
+        gradient: "from-pink-500 to-pink-600",
+        light: "from-pink-50 to-pink-100",
+        text: "text-pink-600"
+      },
+      blue: {
+        bg: "bg-blue-500",
+        gradient: "from-blue-500 to-blue-600",
+        light: "from-blue-50 to-blue-100",
+        text: "text-blue-600"
+      },
+      yellow: {
+        bg: "bg-yellow-500",
+        gradient: "from-yellow-500 to-yellow-600",
+        light: "from-yellow-50 to-yellow-100",
+        text: "text-yellow-600"
+      }
+    };
+    return colorMap[color]?.[type] || colorMap.blue[type];
+  };
+
   return (
     <>
       <Navbar />
@@ -148,24 +190,24 @@ function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-black/30 to-transparent z-10"></div>
         
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-          <div className="text-center animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6 animate-bounce-slow">
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6 animate-bounce">
               <Zap className="w-4 h-4 text-yellow-300" />
               <span className="text-sm font-semibold">#1 Interview Preparation Platform</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent animate-slide-in">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
               Daily 30-Minute<br />Interview Mindset
             </h1>
 
-            <p className="text-xl md:text-2xl text-blue-100 mb-10 max-w-2xl mx-auto animate-fade-in-up animation-delay-200">
+            <p className="text-xl md:text-2xl text-blue-100 mb-10 max-w-2xl mx-auto">
               Thirty focused minutes every day beats hours of irregular practice.
             </p>
 
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 animate-fade-in-up animation-delay-400">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
               <Link
                 to="/html"
-                className="group bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 flex items-center justify-center gap-2 shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+                className="group bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-all duration-300 flex items-center justify-center gap-2 shadow-xl hover:shadow-2xl hover:-translate-y-1 transform"
               >
                 <BookOpen className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                 Start Learning Free
@@ -174,7 +216,7 @@ function Home() {
 
               <button
                 onClick={scrollToCategories}
-                className="group border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 flex items-center justify-center gap-2 backdrop-blur-sm bg-white/10 transform hover:-translate-y-1"
+                className="group border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300 flex items-center justify-center gap-2 backdrop-blur-sm bg-white/10 hover:-translate-y-1 transform"
               >
                 <Code2 className="w-5 h-5 group-hover:rotate-6 transition-transform" />
                 Browse All Topics
@@ -213,7 +255,7 @@ function Home() {
         {/* Featured Learning Paths */}
         <div className="mb-20">
           <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 animate-fade-in">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Popular Interview Topics
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">Most requested topics by our community members</p>
@@ -223,15 +265,13 @@ function Home() {
             {featuredPaths.map((path, index) => (
               <div 
                 key={index}
-                className="group relative bg-white rounded-2xl shadow-lg p-5 hover:shadow-2xl transition-all duration-500 cursor-pointer overflow-hidden transform hover:-translate-y-2"
+                className="group relative bg-white rounded-2xl shadow-lg p-5 hover:shadow-2xl transition-all duration-500 cursor-pointer overflow-hidden hover:-translate-y-2 transform"
                 onClick={() => navigate(path.path)}
-                onMouseEnter={() => setHoveredCard(index)}
-                onMouseLeave={() => setHoveredCard(null)}
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${path.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
                 <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${path.color} rounded-full opacity-0 group-hover:opacity-20 transform translate-x-10 -translate-y-10 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-700`}></div>
                 
-                <div className={`relative z-10 bg-gradient-to-br ${path.color} w-14 h-14 rounded-xl flex items-center justify-center mb-4 shadow-lg transform group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`relative z-10 bg-gradient-to-br ${path.color} w-14 h-14 rounded-xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                   <div className="text-white">{path.icon}</div>
                 </div>
                 
@@ -252,108 +292,100 @@ function Home() {
           </div>
         </div>
 
-        {/* Categories Grid with Enhanced Animations */}
-
-<div ref={categoriesRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16 scroll-mt-20">
-  
-  {/* Frontend Card - Image Right */}
-  <div className="group relative bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
-    <div className="flex flex-col md:flex-row h-full">
-      {/* Content Section */}
-      <div className="flex-1 p-6 md:p-8 bg-gradient-to-br from-green-50 to-white">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="bg-green-500 p-2 rounded-lg text-white">
-            <Code2 className="w-5 h-5" />
+        {/* Categories Grid */}
+        <div ref={categoriesRef} className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16 scroll-mt-20">
+          {/* Frontend Card */}
+          <div className="group relative bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+            <div className="flex flex-col md:flex-row h-full">
+              <div className="flex-1 p-6 md:p-8 bg-gradient-to-br from-green-50 to-white">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="bg-green-500 p-2 rounded-lg text-white">
+                    <Code2 className="w-5 h-5" />
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-800">Frontend Development</h2>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  {categories[0].skills.map((skill, index) => (
+                    <button
+                      key={index}
+                      onClick={() => navigate(skill.path)}
+                      className="flex items-center gap-2 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 hover:border-green-200 group/btn"
+                    >
+                      <span className="text-green-500">{skill.icon}</span>
+                      <span className="text-gray-700 font-medium text-sm">{skill.name}</span>
+                      <ChevronRight className="w-3 h-3 text-gray-400 ml-auto group-hover/btn:text-green-500 group-hover/btn:translate-x-1 transition-all" />
+                    </button>
+                  ))}
+                </div>
+                
+                <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                  <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                  <span>24+ interview questions</span>
+                </div>
+              </div>
+              
+              <div className="md:w-48 lg:w-56 h-48 md:h-auto relative overflow-hidden">
+                <img 
+                  src={require('../photos/frontendposter.jpg')} 
+                  alt="Frontend Development"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 text-white">
+                  <p className="text-sm font-semibold">Popular</p>
+                  <p className="text-xs opacity-90">React • Vue • Angular</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <h2 className="text-xl font-bold text-gray-800">Frontend Development</h2>
-        </div>
-        
-        <div className="grid grid-cols-2 gap-3">
-          {categories[0].skills.map((skill, index) => (
-            <button
-              key={index}
-              onClick={() => navigate(skill.path)}
-              className="flex items-center gap-2 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 hover:border-green-200 group/btn"
-            >
-              <span className="text-green-500">{skill.icon}</span>
-              <span className="text-gray-700 font-medium text-sm">{skill.name}</span>
-              <ChevronRight className="w-3 h-3 text-gray-400 ml-auto group-hover/btn:text-green-500 group-hover/btn:translate-x-1 transition-all" />
-            </button>
-          ))}
-        </div>
-        
-        {/* Decorative Elements */}
-        <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
-          <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-          <span>24+ interview questions</span>
-        </div>
-      </div>
-      
-      {/* Image Section */}
-      <div className="md:w-48 lg:w-56 h-48 md:h-auto relative overflow-hidden">
-        <img 
-          src={require('../photos/frontendposter.jpg')} 
-          alt="Frontend Development"
-          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <div className="absolute bottom-4 left-4 text-white">
-          <p className="text-sm font-semibold">Popular</p>
-          <p className="text-xs opacity-90">React • Vue • Angular</p>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  {/* Backend Card - Image Left */}
-  <div className="group relative bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
-    <div className="flex flex-col md:flex-row-reverse h-full">
-      {/* Content Section */}
-      <div className="flex-1 p-6 md:p-8 bg-gradient-to-br from-yellow-50 to-white">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="bg-yellow-500 p-2 rounded-lg text-white">
-            <Server className="w-5 h-5" />
+          {/* Backend Card */}
+          <div className="group relative bg-white rounded-2xl shadow-xl overflow-hidden transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl">
+            <div className="flex flex-col md:flex-row-reverse h-full">
+              <div className="flex-1 p-6 md:p-8 bg-gradient-to-br from-yellow-50 to-white">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="bg-yellow-500 p-2 rounded-lg text-white">
+                    <Server className="w-5 h-5" />
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-800">Backend & Languages</h2>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  {categories[1].skills.map((skill, index) => (
+                    <button
+                      key={index}
+                      onClick={() => navigate(skill.path)}
+                      className="flex items-center gap-2 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 hover:border-yellow-200 group/btn"
+                    >
+                      <span className="text-yellow-500">{skill.icon}</span>
+                      <span className="text-gray-700 font-medium text-sm">{skill.name}</span>
+                      <ChevronRight className="w-3 h-3 text-gray-400 ml-auto group-hover/btn:text-yellow-500 group-hover/btn:translate-x-1 transition-all" />
+                    </button>
+                  ))}
+                </div>
+                
+                <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                  <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
+                  <span>32+ interview questions</span>
+                </div>
+              </div>
+              
+              <div className="md:w-48 lg:w-56 h-48 md:h-auto relative overflow-hidden">
+                <img 
+                  src={require('../photos/backendposter.jpg')} 
+                  alt="Backend Development"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                <div className="absolute bottom-4 left-4 text-white">
+                  <p className="text-sm font-semibold">Trending</p>
+                  <p className="text-xs opacity-90">Node.js • Python • Java</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <h2 className="text-xl font-bold text-gray-800">Backend & Languages</h2>
         </div>
-        
-        <div className="grid grid-cols-2 gap-3">
-          {categories[1].skills.map((skill, index) => (
-            <button
-              key={index}
-              onClick={() => navigate(skill.path)}
-              className="flex items-center gap-2 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 hover:border-yellow-200 group/btn"
-            >
-              <span className="text-yellow-500">{skill.icon}</span>
-              <span className="text-gray-700 font-medium text-sm">{skill.name}</span>
-              <ChevronRight className="w-3 h-3 text-gray-400 ml-auto group-hover/btn:text-yellow-500 group-hover/btn:translate-x-1 transition-all" />
-            </button>
-          ))}
-        </div>
-        
-        {/* Decorative Elements */}
-        <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
-          <span className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></span>
-          <span>32+ interview questions</span>
-        </div>
-      </div>
-      
-      {/* Image Section */}
-      <div className="md:w-48 lg:w-56 h-48 md:h-auto relative overflow-hidden">
-        <img 
-          src={require('../photos/backendposter.jpg')} 
-          alt="Backend Development"
-          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-        <div className="absolute bottom-4 left-4 text-white">
-          <p className="text-sm font-semibold">Trending</p>
-          <p className="text-xs opacity-90">Node.js • Python • Java</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
         {/* Popular Coding Questions */}
         <div className="mb-20">
@@ -376,7 +408,7 @@ function Home() {
             ].map((topic, index) => (
               <div 
                 key={index}
-                className="group relative bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer overflow-hidden transform hover:-translate-y-2"
+                className="group relative bg-gradient-to-br from-gray-50 to-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer overflow-hidden hover:-translate-y-2 transform"
               >
                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full transform translate-x-16 -translate-y-16 group-hover:translate-x-8 group-hover:-translate-y-8 transition-all duration-500"></div>
                 
@@ -408,7 +440,7 @@ function Home() {
           </div>
         </div>
 
-        {/* Quick Access with Glassmorphism */}
+        {/* Quick Access */}
         <div className="mb-20">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-10">Quick Access</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -419,9 +451,9 @@ function Home() {
               { name: "HR", icon: Users, path: "/hr", color: "pink", desc: "Interview Prep" }
             ].map((item, index) => (
               <Link to={item.path} key={index}>
-                <div className={`group relative bg-gradient-to-br from-${item.color}-50 to-white rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 overflow-hidden`}>
-                  <div className={`absolute inset-0 bg-gradient-to-r from-${item.color}-400 to-${item.color}-600 opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
-                  <div className={`bg-gradient-to-br from-${item.color}-500 to-${item.color}-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg transform group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`group relative bg-gradient-to-br ${getColorClass(item.color, 'light')} rounded-2xl p-8 text-center shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 transform overflow-hidden`}>
+                  <div className={`absolute inset-0 bg-gradient-to-r ${getColorClass(item.color, 'gradient')} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
+                  <div className={`bg-gradient-to-br ${getColorClass(item.color, 'gradient')} w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     <item.icon className="w-8 h-8 text-white" />
                   </div>
                   <div className="text-2xl font-bold text-gray-900 mb-1">{item.name}</div>
@@ -433,12 +465,12 @@ function Home() {
           </div>
         </div>
 
-        {/* Stats Section with Counters */}
+        {/* Stats Section */}
         <div id="stats-section" className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-12 mb-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center transform hover:scale-105 transition-transform duration-300">
-                <div className={`bg-gradient-to-br from-${stat.color}-500 to-${stat.color}-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
+              <div key={index} className="text-center hover:scale-105 transition-transform duration-300">
+                <div className={`${getColorClass(stat.color, 'bg')} w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg`}>
                   {stat.icon}
                 </div>
                 <div className="text-4xl font-bold text-white mb-2">
@@ -463,7 +495,7 @@ function Home() {
             </p>
             <Link
               to="/html"
-              className="inline-flex items-center gap-2 bg-white text-purple-600 px-8 py-4 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              className="inline-flex items-center gap-2 bg-white text-purple-600 px-8 py-4 rounded-xl font-semibold hover:shadow-xl transition-all duration-300 hover:-translate-y-1 transform"
             >
               Start Your Journey Now
               <Play className="w-5 h-5" />
@@ -474,30 +506,8 @@ function Home() {
       
       <Footer />
 
-      <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateX(-30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-        
-        @keyframes bounceSlow {
+      <style>{`
+        @keyframes bounce {
           0%, 100% {
             transform: translateY(0);
           }
@@ -506,41 +516,8 @@ function Home() {
           }
         }
         
-        .animate-fade-in-up {
-          animation: fadeInUp 0.8s ease-out forwards;
-        }
-        
-        .animate-slide-in {
-          animation: slideIn 0.8s ease-out forwards;
-        }
-        
-        .animate-bounce-slow {
-          animation: bounceSlow 2s ease-in-out infinite;
-        }
-        
-        .animation-delay-200 {
-          animation-delay: 0.2s;
-          opacity: 0;
-          animation-fill-mode: forwards;
-        }
-        
-        .animation-delay-400 {
-          animation-delay: 0.4s;
-          opacity: 0;
-          animation-fill-mode: forwards;
-        }
-        
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
-        }
-        
-        .animate-pulse-slow {
-          animation: pulse 3s ease-in-out infinite;
+        .animate-bounce {
+          animation: bounce 2s ease-in-out infinite;
         }
       `}</style>
     </>
