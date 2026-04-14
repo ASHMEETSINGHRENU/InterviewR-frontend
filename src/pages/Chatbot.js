@@ -9,6 +9,9 @@ import {
   Maximize2,
   Sparkles,
   Loader,
+  Zap,
+  ThumbsUp,
+  ThumbsDown,
   Copy,
   Check,
   ExternalLink
@@ -23,8 +26,8 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [setSuggestedTopics] = useState([]);
-  const [setConversationContext] = useState([]);
+  const [suggestedTopics, setSuggestedTopics] = useState([]);
+  const [conversationContext, setConversationContext] = useState([]);
   const [copiedId, setCopiedId] = useState(null);
   
   const messagesEndRef = useRef(null);
