@@ -62,8 +62,8 @@ function CategoryPage() {
         className="relative min-h-screen bg-cover bg-center bg-fixed"
         style={{ backgroundImage: `url(${bgImage})` }}
       >
-        {/* DARK OVERLAY WITH PURPLE/BLUE BLUR */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#5e60ce]/80 via-purple-600/70 to-blue-600/80 backdrop-blur-md"></div>
+        {/* DARK OVERLAY WITH NEW COLOR #DEDED1 */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#DEDED1]/80 via-[#DEDED1]/70 to-[#DEDED1]/60 backdrop-blur-md"></div>
 
         {/* MAIN LAYOUT */}
         <div className="relative flex flex-col lg:flex-row min-h-screen">
@@ -71,7 +71,7 @@ function CategoryPage() {
           <div className="lg:hidden fixed bottom-4 right-4 z-50">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="bg-[#5e60ce] hover:bg-[#4a4cb3] text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 animate-pulse"
+              className="bg-[#DEDED1] hover:bg-[#CECDBC] text-gray-800 p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 animate-pulse"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -87,25 +87,25 @@ function CategoryPage() {
             ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           `}>
             <div className="h-full bg-white/95 backdrop-blur-md shadow-2xl overflow-y-auto">
-              {/* Sidebar Header - Updated with gradient */}
-              <div className="sticky top-0 bg-gradient-to-r from-[#5e60ce] to-purple-600 text-white p-6">
+              {/* Sidebar Header - Updated with gradient using #DEDED1 */}
+              <div className="sticky top-0 bg-gradient-to-r from-[#DEDED1] to-[#CECDBC] text-gray-800 p-6">
                 <h2 className="text-2xl font-bold capitalize flex items-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                   </svg>
                   {formatCategoryName(category)} Questions
                 </h2>
-                <p className="text-purple-100 text-sm mt-2">{questions.length} Questions Available</p>
+                <p className="text-gray-600 text-sm mt-2">{questions.length} Questions Available</p>
                 
                 {/* Language Progress in Sidebar */}
-                <div className="mt-4 pt-4 border-t border-white/20">
+                <div className="mt-4 pt-4 border-t border-gray-300">
                   <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="font-medium">Progress: {formatCategoryName(category)}</span>
-                    <span>{questions.length > 0 ? `${Math.round(((currentIndex + 1) / questions.length) * 100)}%` : '0%'}</span>
+                    <span className="font-medium text-gray-700">Progress: {formatCategoryName(category)}</span>
+                    <span className="text-gray-600">{questions.length > 0 ? `${Math.round(((currentIndex + 1) / questions.length) * 100)}%` : '0%'}</span>
                   </div>
-                  <div className="h-2 bg-white/30 rounded-full overflow-hidden">
+                  <div className="h-2 bg-gray-300 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-white transition-all duration-300"
+                      className="h-full bg-[#DEDED1] transition-all duration-300"
                       style={{ width: questions.length > 0 ? `${((currentIndex + 1) / questions.length) * 100}%` : '0%' }}
                     ></div>
                   </div>
@@ -124,8 +124,8 @@ function CategoryPage() {
                     className={`
                       p-4 cursor-pointer rounded-xl transition-all duration-300 transform hover:scale-102
                       ${index === currentIndex
-                        ? "bg-gradient-to-r from-[#5e60ce] to-purple-600 text-white shadow-lg scale-105"
-                        : "bg-gray-50 hover:bg-purple-50 text-gray-700 hover:shadow-md"
+                        ? "bg-gradient-to-r from-[#DEDED1] to-[#CECDBC] text-gray-800 shadow-lg scale-105"
+                        : "bg-gray-50 hover:bg-[#DEDED1]/30 text-gray-700 hover:shadow-md"
                       }
                     `}
                   >
@@ -133,8 +133,8 @@ function CategoryPage() {
                       <span className={`
                         w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
                         ${index === currentIndex 
-                          ? "bg-white text-[#5e60ce]" 
-                          : "bg-purple-100 text-purple-700"}
+                          ? "bg-white text-[#DEDED1]" 
+                          : "bg-[#DEDED1] text-gray-700"}
                       `}>
                         {index + 1}
                       </span>
@@ -171,17 +171,17 @@ function CategoryPage() {
                 {/* Progress Bar with Language */}
                 <div className="mb-6 bg-white/10 backdrop-blur-md rounded-lg p-4">
                   <div className="flex justify-between text-white text-sm mb-2">
-                    <span className="font-semibold flex items-center gap-2">
+                    <span className="font-semibold flex items-center gap-2 text-gray-800">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                       </svg>
                       Progress: {formatCategoryName(category)}
                     </span>
-                    <span>{currentIndex + 1} of {questions.length} Questions</span>
+                    <span className="text-gray-700">{currentIndex + 1} of {questions.length} Questions</span>
                   </div>
-                  <div className="h-2 bg-white/30 rounded-full overflow-hidden">
+                  <div className="h-2 bg-gray-300 rounded-full overflow-hidden">
                     <div 
-                      className="h-full bg-white transition-all duration-300"
+                      className="h-full bg-[#DEDED1] transition-all duration-300"
                       style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
                     ></div>
                   </div>
@@ -189,9 +189,9 @@ function CategoryPage() {
 
                 {/* Question Card - Updated with new colors */}
                 <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition-all duration-300">
-                  {/* Card Header - Updated gradient */}
-                  <div className="bg-gradient-to-r from-[#5e60ce] to-purple-600 px-6 py-4">
-                    <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  {/* Card Header - Updated gradient with #DEDED1 */}
+                  <div className="bg-gradient-to-r from-[#DEDED1] to-[#CECDBC] px-6 py-4">
+                    <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
                       </svg>
@@ -202,8 +202,8 @@ function CategoryPage() {
                   {/* Question Content */}
                   <div className="p-6 lg:p-8">
                     <div className="mb-8">
-                      <h3 className="text-sm font-semibold text-[#5e60ce] uppercase tracking-wider mb-3">Question:</h3>
-                      <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-5 border-l-4 border-[#5e60ce]">
+                      <h3 className="text-sm font-semibold text-[#DEDED1] uppercase tracking-wider mb-3">Question:</h3>
+                      <div className="bg-gradient-to-r from-[#DEDED1]/20 to-[#CECDBC]/20 rounded-xl p-5 border-l-4 border-[#DEDED1]">
                         <p className="text-lg lg:text-xl text-gray-800 leading-relaxed">
                           {questions[currentIndex].question}
                         </p>
@@ -211,8 +211,8 @@ function CategoryPage() {
                     </div>
 
                     <div className="mb-8">
-                      <h3 className="text-sm font-semibold text-[#5e60ce] uppercase tracking-wider mb-3">Answer:</h3>
-                      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-5 border-l-4 border-purple-600">
+                      <h3 className="text-sm font-semibold text-[#DEDED1] uppercase tracking-wider mb-3">Answer:</h3>
+                      <div className="bg-gradient-to-r from-[#CECDBC]/20 to-[#DEDED1]/20 rounded-xl p-5 border-l-4 border-[#CECDBC]">
                         <p className="text-gray-700 leading-relaxed">
                           {questions[currentIndex].answer}
                         </p>
@@ -229,7 +229,7 @@ function CategoryPage() {
                           transition-all duration-300 transform hover:scale-105
                           ${currentIndex === 0
                             ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                            : "bg-[#5e60ce] hover:bg-[#4a4cb3] text-white shadow-lg hover:shadow-xl"
+                            : "bg-[#DEDED1] hover:bg-[#CECDBC] text-gray-800 shadow-lg hover:shadow-xl"
                           }
                         `}
                       >
@@ -264,7 +264,7 @@ function CategoryPage() {
                             transition-all duration-300 transform hover:scale-105
                             ${currentIndex === questions.length - 1
                               ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                              : "bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-xl"
+                              : "bg-[#CECDBC] hover:bg-[#BDBDAE] text-gray-800 shadow-lg hover:shadow-xl"
                             }
                           `}
                         >
@@ -281,8 +281,8 @@ function CategoryPage() {
             ) : (
               <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-12 text-center">
                 <div className="animate-pulse">
-                  <div className="w-24 h-24 bg-[#5e60ce]/20 rounded-full mx-auto mb-6 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-[#5e60ce]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-24 h-24 bg-[#DEDED1]/30 rounded-full mx-auto mb-6 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-[#DEDED1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
                   </div>

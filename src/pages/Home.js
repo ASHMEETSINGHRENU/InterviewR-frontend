@@ -30,6 +30,7 @@ import {
 import homeBg from '../photos/homebg.jpg'; 
 import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
+import Chatbot from "./Chatbot";
 
 function Home() {
   const navigate = useNavigate();
@@ -503,6 +504,7 @@ function Home() {
           </div>
         </div>
       </div>
+      <Chatbot />
       
       <Footer />
 
