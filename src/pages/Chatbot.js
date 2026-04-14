@@ -412,18 +412,6 @@ const Chatbot = () => {
                             </ReactMarkdown>
                           </div>
                           
-                          {/* LINK BUTTON - Shows BEFORE suggestions */}
-                          {message.type === 'bot' && message.showLinkButton && message.categoryPath && (
-                            <div className="mt-3 pt-2 border-t border-gray-100">
-                              <button
-                                onClick={() => navigateToQuestions(message.categoryPath, message.category)}
-                                className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all hover:scale-105 w-full justify-center"
-                              >
-                                <ExternalLink className="w-4 h-4" />
-                                View all {message.category} questions →
-                              </button>
-                            </div>
-                          )}
 
                           {/* LINK BUTTON for search results */}
                           {message.type === 'bot' && message.showLinkButton && message.categoryPath && message.category && (
