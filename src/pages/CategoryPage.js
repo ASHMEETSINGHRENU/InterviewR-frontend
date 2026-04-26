@@ -201,19 +201,31 @@ function CategoryPage() {
 
                   {/* Question Content */}
                   <div className="p-6 lg:p-8">
+                    {/* QUESTION SECTION - Distinct Brand Color (Indigo) */}
                     <div className="mb-8">
-                      <h3 className="text-sm font-semibold text-[#DEDED1] uppercase tracking-wider mb-3">Question:</h3>
-                      <div className="bg-gradient-to-r from-[#DEDED1]/20 to-[#CECDBC]/20 rounded-xl p-5 border-l-4 border-[#DEDED1]">
-                        <p className="text-lg lg:text-xl text-gray-800 leading-relaxed">
+                      <h3 className="text-sm font-semibold text-[#4F46E5] uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Question:
+                      </h3>
+                      <div className="bg-gradient-to-r from-[#4F46E5]/5 to-[#4F46E5]/10 rounded-xl p-5 border-l-4 border-[#4F46E5]">
+                        <p className="text-lg lg:text-xl text-gray-800 leading-relaxed font-medium">
                           {questions[currentIndex].question}
                         </p>
                       </div>
                     </div>
 
+                    {/* ANSWER SECTION - Readable Dark Gray */}
                     <div className="mb-8">
-                      <h3 className="text-sm font-semibold text-[#DEDED1] uppercase tracking-wider mb-3">Answer:</h3>
-                      <div className="bg-gradient-to-r from-[#CECDBC]/20 to-[#DEDED1]/20 rounded-xl p-5 border-l-4 border-[#CECDBC]">
-                        <p className="text-gray-700 leading-relaxed">
+                      <h3 className="text-sm font-semibold text-[#374151] uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        Answer:
+                      </h3>
+                      <div className="bg-gradient-to-r from-[#374151]/5 to-[#374151]/10 rounded-xl p-5 border-l-4 border-[#374151]">
+                        <p className="text-[#374151] leading-relaxed">
                           {questions[currentIndex].answer}
                         </p>
                       </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import defaultProfilePic from "../photos/defaultPic.jpg"; // Adjust the path based on your folder structure
+import defaultProfilePic from "../photos/defaultPic.jpg";
 
 function Profile() {
   const userId = localStorage.getItem("userId");

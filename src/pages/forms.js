@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+
 const Forms = () => {
   const navigate = useNavigate();
   
@@ -485,6 +486,7 @@ const Forms = () => {
         </div>
       </div>
 
+
       <style jsx>{`
         @keyframes blob {
           0% { transform: translate(0px, 0px) scale(1); }
@@ -531,8 +533,9 @@ const Forms = () => {
           animation-delay: 4s;
         }
       `}</style>
+
     </div>
-  );
+  ); 
 };
 
 export default Forms;
