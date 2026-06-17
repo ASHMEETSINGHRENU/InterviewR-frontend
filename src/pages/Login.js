@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { Mail, Lock, LogIn, Github, Chrome } from "lucide-react";
-
+import { Mail, Lock, LogIn, Chrome } from "lucide-react";
+import { GoogleLogin } from "@react-oauth/google";
 
 // Import the image
 import loginImage from "../photos/login_img.jpg";
@@ -78,7 +78,7 @@ function Login() {
       );
 
       const { token, user } = res.data;
-     localStorage.setItem("token", token);
+      localStorage.setItem("token", token);
       localStorage.setItem("userId", user?.id);
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -96,26 +96,58 @@ function Login() {
     }
   };
 
-const handleGoogleLogin = () => {
-    alert("⚠️ Google login is currently unavailable due to server maintenance. Please use email/password to login manually.");
-    // window.location.href = "#";
+  // Handle Google Login Success - UPDATED VERSION
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      console.log("Google Credential:", credentialResponse);
+
+      // Send the Google credential to your backend
+      const res = await axios.post(
+        "https://interviewr-backend.onrender.com/api/auth/google-login",
+        {
+          credential: credentialResponse.credential
+        }
+      );
+
+      // Store the token and user info
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("userId", res.data.user.id);
+      
+      // Set default authorization header for future requests
+      axios.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
+
+      // Show success message
+      alert("✅ Google Login Successful! Welcome to InterviewReady.");
+      
+      // Navigate to home page
+      navigate("/home");
+    } catch (error) {
+      console.error("Google Login Error:", error);
+      
+      // Show specific error message from backend if available
+      const errorMessage = error?.response?.data?.message || 
+                          "❌ Google Login Failed. Please try again.";
+      alert(errorMessage);
+    }
   };
 
-  const handleGithubLogin = () => {
-    alert("🔄 GitHub login service is temporarily down. Please sign in with your email and password instead.");
-    // window.location.href = "#";
+  // Handle Google Login Error
+  const handleGoogleError = () => {
+    console.log("Google Login Failed");
+    alert("❌ Google Login Failed. Please try again.");
   };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#cbb2fe] via-[#dcc7ff] to-[#e9d9ff] flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
       
-      {/* Animated Background Elements - Updated with new colors */}
+      {/* Animated Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#d0b5ff] rounded-full mix-blend-multiply filter blur-3xl animate-blob opacity-40"></div>
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[#e5d0ff] rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000 opacity-40"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#f0e4ff] rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000 opacity-40"></div>
       </div>
 
-      {/* Floating Particles - Updated with lighter color */}
+      {/* Floating Particles */}
       <div className="fixed inset-0 pointer-events-none">
         {[...Array(30)].map((_, i) => (
           <div
@@ -137,7 +169,7 @@ const handleGoogleLogin = () => {
           
           <div className="grid lg:grid-cols-2">
             
-            {/* Left Side - Image Section - Updated gradient */}
+            {/* Left Side - Image Section */}
             <div className="hidden lg:block relative h-full min-h-[600px] bg-gradient-to-br from-[#cbb2fe]/90 to-[#dcc7ff]/90">
               <img
                 src={loginImage}
@@ -145,7 +177,7 @@ const handleGoogleLogin = () => {
                 className="absolute inset-0 w-full h-full object-cover opacity-60"
               />
               
-              {/* Overlay Content - Updated gradient */}
+              {/* Overlay Content */}
               <div className="absolute inset-0 flex flex-col items-center justify-center p-12 text-white bg-gradient-to-t from-[#b39ddb]/90 via-[#cbb2fe]/50 to-transparent">
                 <div className="text-center transform hover:scale-105 transition-transform duration-500">
                   <h2 className="text-4xl font-bold mb-4 text-white">Welcome Back!</h2>
@@ -153,7 +185,7 @@ const handleGoogleLogin = () => {
                     Sign in to continue your interview preparation journey
                   </p>
                   
-                  {/* Decorative Elements - Updated colors */}
+                  {/* Decorative Elements */}
                   <div className="flex justify-center space-x-4">
                     <div className="w-16 h-16 bg-white/20 rounded-2xl backdrop-blur-sm flex items-center justify-center animate-bounce" style={{ animationDelay: "0s" }}>
                       <span className="text-2xl">💼</span>
@@ -166,7 +198,7 @@ const handleGoogleLogin = () => {
                     </div>
                   </div>
 
-                  {/* Testimonial/Quote - Updated styles */}
+                  {/* Testimonial/Quote */}
                   <div className="mt-12 p-6 bg-white/20 backdrop-blur-sm rounded-2xl border border-white/30">
                     <p className="text-sm italic text-white">
                       "The best investment you can make is in yourself. Start your interview preparation journey today!"
@@ -180,11 +212,11 @@ const handleGoogleLogin = () => {
             <div className="p-8 sm:p-12 lg:p-16 bg-white/20 backdrop-blur-sm">
               <div className="max-w-md mx-auto w-full">
                 
-                {/* Header - Updated text colors */}
+                {/* Header */}
                 <div className="text-center lg:text-left mb-8">
-              <h1 className="text-base sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-purple-600 hover:to-pink-600 transition-all duration-300 truncate max-w-[120px] sm:max-w-none">
-                InterviewReady
-              </h1>
+                  <h1 className="text-base sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:from-purple-600 hover:to-pink-600 transition-all duration-300 truncate max-w-[120px] sm:max-w-none">
+                    InterviewReady
+                  </h1>
                   <p className="text-[#4a3b6e]">
                     Welcome back! Please enter your details
                   </p>
@@ -200,7 +232,7 @@ const handleGoogleLogin = () => {
                 {/* Login Form */}
                 <form onSubmit={handleSubmit} className="space-y-6">
                   
-                  {/* Email Field - Updated focus colors */}
+                  {/* Email Field */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-[#2d1b4e]">
                       Email Address
@@ -225,7 +257,7 @@ const handleGoogleLogin = () => {
                     )}
                   </div>
 
-                  {/* Password Field - Updated focus colors */}
+                  {/* Password Field */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-[#2d1b4e]">
                       Password
@@ -266,31 +298,31 @@ const handleGoogleLogin = () => {
                     )}
                   </div>
 
-                  {/* Remember Me & Forgot Password - Updated colors */}
-                       <div className="flex items-center justify-between">
-                         <label className="flex items-center space-x-2 cursor-pointer group">
-                           <div className="relative">
-                             <input
-                               type="checkbox"
-                               checked={rememberMe}
-                               onChange={(e) => setRememberMe(e.target.checked)}
-                               className="absolute opacity-0 w-4 h-4 cursor-pointer"
-                             />
-                            <div className={`w-4 h-4 border-2 rounded flex items-center justify-center transition-all duration-200 ${ rememberMe  ? 'bg-blue-500 border-blue-500' 
-                                 : 'border-blue-300 bg-white/80 group-hover:border-blue-500'
-                             }`}>
-                               {rememberMe && (
-                                 <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                 </svg>
-                               )}
-                             </div>
-                           </div>
-                           <span className="text-sm text-gray-600 group-hover:text-gray-800">Remember me</span>
-                         </label>
-                       </div>
+                  {/* Remember Me */}
+                  <div className="flex items-center justify-between">
+                    <label className="flex items-center space-x-2 cursor-pointer group">
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          checked={rememberMe}
+                          onChange={(e) => setRememberMe(e.target.checked)}
+                          className="absolute opacity-0 w-4 h-4 cursor-pointer"
+                        />
+                        <div className={`w-4 h-4 border-2 rounded flex items-center justify-center transition-all duration-200 ${
+                          rememberMe ? 'bg-blue-500 border-blue-500' : 'border-blue-300 bg-white/80 group-hover:border-blue-500'
+                        }`}>
+                          {rememberMe && (
+                            <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+                      <span className="text-sm text-gray-600 group-hover:text-gray-800">Remember me</span>
+                    </label>
+                  </div>
 
-                  {/* Login Button - Updated gradient */}
+                  {/* Login Button */}
                   <button
                     type="submit"
                     disabled={loading}
@@ -315,34 +347,27 @@ const handleGoogleLogin = () => {
                     <div className="absolute inset-0 bg-gradient-to-r from-[#b39ddb] to-[#a58ac7] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </button>
 
-                  {/* Social Login Divider - Updated colors */}
+                  {/* Social Login Divider */}
                   <div>
                     <div className="relative flex justify-center text-sm">
                       <span className="px-4 bg-transparent text-[#4a3b6e]">Or continue with</span>
                     </div>
                   </div>
 
-                  {/* Social Login Buttons - Updated colors */}
-                  <div className="grid grid-cols-2 gap-4">
-                    <button
-                      type="button"
-                      onClick={handleGoogleLogin}
-                      className="flex items-center justify-center space-x-2 py-3 px-4 bg-white/40 backdrop-blur-sm border border-[#cbb2fe] rounded-xl hover:bg-white/60 transition-all duration-300 transform hover:scale-105 group"
-                    >
-                      <Chrome className="w-5 h-5 text-[#4a3b6e] group-hover:text-[#2d1b4e]" />
-                      <span className="text-sm text-[#4a3b6e] group-hover:text-[#2d1b4e]">Google</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleGithubLogin}
-                      className="flex items-center justify-center space-x-2 py-3 px-4 bg-white/40 backdrop-blur-sm border border-[#cbb2fe] rounded-xl hover:bg-white/60 transition-all duration-300 transform hover:scale-105 group"
-                    >
-                      <Github className="w-5 h-5 text-[#4a3b6e] group-hover:text-[#2d1b4e]" />
-                      <span className="text-sm text-[#4a3b6e] group-hover:text-[#2d1b4e]">GitHub</span>
-                    </button>
+                  {/* Google Login Button */}
+                  <div className="flex justify-center">
+                    <GoogleLogin
+                      onSuccess={handleGoogleSuccess}
+                      onError={handleGoogleError}
+                      useOneTap
+                      theme="outline"
+                      size="large"
+                      shape="pill"
+                      text="signin_with"
+                    />
                   </div>
 
-                  {/* Register Link - Updated colors */}
+                  {/* Register Link */}
                   <p className="text-center text-[#4a3b6e] text-sm">
                     Don't have an account?{" "}
                     <Link
