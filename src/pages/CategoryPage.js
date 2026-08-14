@@ -1,314 +1,467 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { 
+  BookOpen, 
+  ChevronLeft, 
+  ChevronRight, 
+  CheckCircle, 
+  CheckCircle2,
+  Circle, 
+  Search, 
+  Copy, 
+  Check, 
+  Home, 
+  Sparkles, 
+  Menu, 
+  X, 
+  ArrowLeft,
+  Share2,
+  HelpCircle,
+  Award
+} from "lucide-react";
 
-
-/* BACKGROUND IMAGES */
-import jsBg from "../photos/js.jpg";
-import devBg from "../photos/devops.jpg";
-import defaultBg from "../photos/default.jpg";
-
-/* CATEGORY → BACKGROUND MAP */
-const categoryBackground = {
-  javascript: jsBg,
-  react: devBg
+/* CATEGORY BRAND ACCENT MAP */
+const categoryAccents = {
+  javascript: { color: "from-amber-500 to-yellow-600", bgTint: "bg-amber-500/10 text-amber-400 border-amber-500/30" },
+  react: { color: "from-cyan-500 to-blue-600", bgTint: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30" },
+  html: { color: "from-orange-500 to-red-600", bgTint: "bg-orange-500/10 text-orange-400 border-orange-500/30" },
+  tailwind: { color: "from-teal-400 to-cyan-500", bgTint: "bg-teal-500/10 text-teal-400 border-teal-500/30" },
+  node: { color: "from-emerald-500 to-green-600", bgTint: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" },
+  express: { color: "from-gray-500 to-slate-700", bgTint: "bg-slate-500/10 text-slate-300 border-slate-500/30" },
+  java: { color: "from-red-500 to-amber-700", bgTint: "bg-red-500/10 text-red-400 border-red-500/30" },
+  python: { color: "from-blue-500 to-amber-500", bgTint: "bg-blue-500/10 text-blue-400 border-blue-500/30" },
+  dsa: { color: "from-purple-500 to-indigo-600", bgTint: "bg-purple-500/10 text-purple-400 border-purple-500/30" },
+  mongodb: { color: "from-emerald-500 to-teal-700", bgTint: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" },
+  mysql: { color: "from-blue-600 to-indigo-700", bgTint: "bg-blue-500/10 text-blue-400 border-blue-500/30" }
 };
 
 function CategoryPage() {
   const { category } = useParams();
+  const navigate = useNavigate();
+
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [copiedAnswer, setCopiedAnswer] = useState(false);
+  const [copiedQuestion, setCopiedQuestion] = useState(false);
 
-  /* SELECT BACKGROUND BASED ON CATEGORY */
-  const bgImage = categoryBackground[category?.toLowerCase()] || defaultBg;
+  // LocalStorage learned tracking per category
+  const storageKey = `interviewready_learned_${category?.toLowerCase()}`;
+  const [learnedQuestions, setLearnedQuestions] = useState(() => {
+    const saved = localStorage.getItem(storageKey);
+    return saved ? JSON.parse(saved) : [];
+  });
 
   useEffect(() => {
+    localStorage.setItem(storageKey, JSON.stringify(learnedQuestions));
+  }, [learnedQuestions, storageKey]);
+
+  // Fetch Questions from API
+  useEffect(() => {
+    setIsLoading(true);
     axios
       .get(`https://interviewr-backend.onrender.com/api/questions/${category}`)
       .then((res) => {
-        setQuestions(res.data);
+        setQuestions(res.data || []);
+        setCurrentIndex(0);
+      })
+      .catch((err) => {
+        console.error("Error loading questions:", err);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, [category]);
 
-  const nextQuestion = () => {
-    if(currentIndex < questions.length - 1){
-      setCurrentIndex(currentIndex + 1);
+  const currentAccents = categoryAccents[category?.toLowerCase()] || {
+    color: "from-indigo-600 via-purple-600 to-pink-600",
+    bgTint: "bg-indigo-500/10 text-indigo-400 border-indigo-500/30"
+  };
+
+  const nextQuestion = useCallback(() => {
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex((prev) => prev + 1);
+    }
+  }, [currentIndex, questions.length]);
+
+  const prevQuestion = useCallback(() => {
+    if (currentIndex > 0) {
+      setCurrentIndex((prev) => prev - 1);
+    }
+  }, [currentIndex]);
+
+  // Keyboard navigation support
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowRight') nextQuestion();
+      if (e.key === 'ArrowLeft') prevQuestion();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [nextQuestion, prevQuestion]);
+
+  const toggleLearned = (index) => {
+    if (learnedQuestions.includes(index)) {
+      setLearnedQuestions(prev => prev.filter(i => i !== index));
+    } else {
+      setLearnedQuestions(prev => [...prev, index]);
     }
   };
 
-  const prevQuestion = () => {
-    if(currentIndex > 0){
-      setCurrentIndex(currentIndex - 1);
+  const copyToClipboard = (text, type) => {
+    navigator.clipboard.writeText(text);
+    if (type === 'answer') {
+      setCopiedAnswer(true);
+      setTimeout(() => setCopiedAnswer(false), 2000);
+    } else {
+      setCopiedQuestion(true);
+      setTimeout(() => setCopiedQuestion(false), 2000);
     }
   };
 
-  const handleDone = () => {
-    window.location.href = '/home';
-  };
-
-  // Format category name for display
   const formatCategoryName = (cat) => {
-    return cat?.charAt(0).toUpperCase() + cat?.slice(1).toLowerCase() || '';
+    if (!cat) return "";
+    return cat.toUpperCase() === "DSA" || cat.toUpperCase() === "HTML"
+      ? cat.toUpperCase()
+      : cat.charAt(0).toUpperCase() + cat.slice(1).toLowerCase();
   };
+
+  const filteredQuestions = questions.filter((q, idx) => {
+    return q.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+           (q.answer && q.answer.toLowerCase().includes(searchQuery.toLowerCase()));
+  });
+
+  const isCurrentLearned = learnedQuestions.includes(currentIndex);
+  const progressPercentage = questions.length > 0 
+    ? Math.round((learnedQuestions.length / questions.length) * 100) 
+    : 0;
 
   return (
-    <>
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
       <Navbar />
-     
-      {/* BACKGROUND CONTAINER */}
-      <div
-        className="relative min-h-screen bg-cover bg-center bg-fixed"
-        style={{ backgroundImage: `url(${bgImage})` }}
-      >
-        {/* DARK OVERLAY WITH NEW COLOR #DEDED1 */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#DEDED1]/80 via-[#DEDED1]/70 to-[#DEDED1]/60 backdrop-blur-md"></div>
 
-        {/* MAIN LAYOUT */}
-        <div className="relative flex flex-col lg:flex-row min-h-screen">
-          {/* Mobile Sidebar Toggle - Updated with new color */}
-          <div className="lg:hidden fixed bottom-4 right-4 z-50">
-            <button
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="bg-[#DEDED1] hover:bg-[#CECDBC] text-gray-800 p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-110 animate-pulse"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-          </div>
+      {/* Top Category Hero Banner */}
+      <div className="bg-slate-900/90 border-b border-slate-800 backdrop-blur-md pt-20 pb-6 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
+          
+          {/* Left: Breadcrumbs & Title */}
+          <div>
+            <div className="flex items-center gap-2 text-xs text-slate-400 mb-2">
+              <Link to="/home" className="hover:text-white transition-colors flex items-center gap-1">
+                <Home className="w-3.5 h-3.5" />
+                <span>Home</span>
+              </Link>
+              <span>/</span>
+              <span className="text-purple-400 font-semibold">{formatCategoryName(category)}</span>
+            </div>
 
-          {/* SIDEBAR - Desktop & Mobile */}
-          <div className={`
-            lg:w-80 lg:block lg:relative lg:translate-x-0
-            fixed inset-y-0 left-0 z-40 w-72
-            transform transition-transform duration-300 ease-in-out
-            ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-          `}>
-            <div className="h-full bg-white/95 backdrop-blur-md shadow-2xl overflow-y-auto">
-              {/* Sidebar Header - Updated with gradient using #DEDED1 */}
-              <div className="sticky top-0 bg-gradient-to-r from-[#DEDED1] to-[#CECDBC] text-gray-800 p-6">
-                <h2 className="text-2xl font-bold capitalize flex items-center gap-2">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
-                  {formatCategoryName(category)} Questions
-                </h2>
-                <p className="text-gray-600 text-sm mt-2">{questions.length} Questions Available</p>
-                
-                {/* Language Progress in Sidebar */}
-                <div className="mt-4 pt-4 border-t border-gray-300">
-                  <div className="flex items-center justify-between text-sm mb-2">
-                    <span className="font-medium text-gray-700">Progress: {formatCategoryName(category)}</span>
-                    <span className="text-gray-600">{questions.length > 0 ? `${Math.round(((currentIndex + 1) / questions.length) * 100)}%` : '0%'}</span>
-                  </div>
-                  <div className="h-2 bg-gray-300 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-[#DEDED1] transition-all duration-300"
-                      style={{ width: questions.length > 0 ? `${((currentIndex + 1) / questions.length) * 100}%` : '0%' }}
-                    ></div>
-                  </div>
-                </div>
+            <div className="flex items-center gap-3">
+              <div className={`p-2.5 rounded-xl bg-gradient-to-r ${currentAccents.color} text-white shadow-lg`}>
+                <BookOpen className="w-6 h-6" />
               </div>
-
-              {/* Questions List */}
-              <div className="p-4 space-y-2">
-                {questions.map((q, index) => (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setCurrentIndex(index);
-                      setIsSidebarOpen(false);
-                    }}
-                    className={`
-                      p-4 cursor-pointer rounded-xl transition-all duration-300 transform hover:scale-102
-                      ${index === currentIndex
-                        ? "bg-gradient-to-r from-[#DEDED1] to-[#CECDBC] text-gray-800 shadow-lg scale-105"
-                        : "bg-gray-50 hover:bg-[#DEDED1]/30 text-gray-700 hover:shadow-md"
-                      }
-                    `}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className={`
-                        w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold
-                        ${index === currentIndex 
-                          ? "bg-white text-[#DEDED1]" 
-                          : "bg-[#DEDED1] text-gray-700"}
-                      `}>
-                        {index + 1}
-                      </span>
-                      <div className="flex-1">
-                        <p className="font-medium truncate">Question {index + 1}</p>
-                        <p className="text-xs opacity-75 truncate mt-1">
-                          {q.question.substring(0, 40)}...
-                        </p>
-                      </div>
-                      {index === currentIndex && (
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      )}
-                    </div>
-                  </div>
-                ))}
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-2">
+                  {formatCategoryName(category)} Interview Preparation
+                </h1>
+                <p className="text-xs sm:text-sm text-slate-400">
+                  Master core concepts, frequent interview questions, & detailed explanations
+                </p>
               </div>
             </div>
           </div>
 
-          {/* Overlay for mobile sidebar */}
-          {isSidebarOpen && (
-            <div 
-              className="fixed inset-0 bg-black/50 z-30 lg:hidden"
-              onClick={() => setIsSidebarOpen(false)}
-            ></div>
-          )}
-
-          {/* MAIN CONTENT */}
-          <div className="flex-1 flex justify-center items-start p-4 lg:p-10">
-            {questions.length > 0 ? (
-              <div className="w-full max-w-4xl">
-                {/* Progress Bar with Language */}
-                <div className="mb-6 bg-white/10 backdrop-blur-md rounded-lg p-4">
-                  <div className="flex justify-between text-white text-sm mb-2">
-                    <span className="font-semibold flex items-center gap-2 text-gray-800">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                      </svg>
-                      Progress: {formatCategoryName(category)}
-                    </span>
-                    <span className="text-gray-700">{currentIndex + 1} of {questions.length} Questions</span>
-                  </div>
-                  <div className="h-2 bg-gray-300 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-[#DEDED1] transition-all duration-300"
-                      style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                {/* Question Card - Updated with new colors */}
-                <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition-all duration-300">
-                  {/* Card Header - Updated gradient with #DEDED1 */}
-                  <div className="bg-gradient-to-r from-[#DEDED1] to-[#CECDBC] px-6 py-4">
-                    <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                      </svg>
-                      Question {currentIndex + 1}
-                    </h2>
-                  </div>
-
-                  {/* Question Content */}
-                  <div className="p-6 lg:p-8">
-                    {/* QUESTION SECTION - Distinct Brand Color (Indigo) */}
-                    <div className="mb-8">
-                      <h3 className="text-sm font-semibold text-[#4F46E5] uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Question:
-                      </h3>
-                      <div className="bg-gradient-to-r from-[#4F46E5]/5 to-[#4F46E5]/10 rounded-xl p-5 border-l-4 border-[#4F46E5]">
-                        <p className="text-lg lg:text-xl text-gray-800 leading-relaxed font-medium">
-                          {questions[currentIndex].question}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* ANSWER SECTION - Readable Dark Gray */}
-                    <div className="mb-8">
-                      <h3 className="text-sm font-semibold text-[#374151] uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                        Answer:
-                      </h3>
-                      <div className="bg-gradient-to-r from-[#374151]/5 to-[#374151]/10 rounded-xl p-5 border-l-4 border-[#374151]">
-                        <p className="text-[#374151] leading-relaxed">
-                          {questions[currentIndex].answer}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Navigation Buttons */}
-                    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 pt-6 border-t border-gray-200">
-                      <button
-                        onClick={prevQuestion}
-                        disabled={currentIndex === 0}
-                        className={`
-                          flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium w-full sm:w-auto
-                          transition-all duration-300 transform hover:scale-105
-                          ${currentIndex === 0
-                            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                            : "bg-[#DEDED1] hover:bg-[#CECDBC] text-gray-800 shadow-lg hover:shadow-xl"
-                          }
-                        `}
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                        Previous
-                      </button>
-
-                      <span className="text-sm text-gray-500 order-first sm:order-none">
-                        Question {currentIndex + 1} of {questions.length}
-                      </span>
-
-                      {currentIndex === questions.length - 1 ? (
-                        <button
-                          onClick={handleDone}
-                          className="flex items-center justify-center gap-2 px-8 py-3 rounded-xl font-medium w-full sm:w-auto
-                            bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 
-                            text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 animate-pulse"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                          Done
-                        </button>
-                      ) : (
-                        <button
-                          onClick={nextQuestion}
-                          disabled={currentIndex === questions.length - 1}
-                          className={`
-                            flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium w-full sm:w-auto
-                            transition-all duration-300 transform hover:scale-105
-                            ${currentIndex === questions.length - 1
-                              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                              : "bg-[#CECDBC] hover:bg-[#BDBDAE] text-gray-800 shadow-lg hover:shadow-xl"
-                            }
-                          `}
-                        >
-                          Next
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                          </svg>
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                </div>
+          {/* Right: Progress Tracker Widget */}
+          <div className="flex items-center gap-4 bg-slate-950/80 border border-slate-800 p-3.5 rounded-2xl">
+            <div className="flex items-center gap-2 text-emerald-400">
+              <Award className="w-5 h-5" />
+              <div>
+                <div className="text-xs text-slate-400">Learned Progress</div>
+                <div className="text-sm font-bold text-white">{learnedQuestions.length} / {questions.length} Questions</div>
               </div>
+            </div>
+            <div className="w-28 bg-slate-800 h-2.5 rounded-full overflow-hidden">
+              <div 
+                className="bg-gradient-to-r from-emerald-500 to-green-400 h-full transition-all duration-500"
+                style={{ width: `${progressPercentage}%` }}
+              ></div>
+            </div>
+            <span className="text-xs font-bold text-emerald-400">{progressPercentage}%</span>
+          </div>
+
+        </div>
+      </div>
+
+      {/* Main Content Layout */}
+      <div className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        {/* Sidebar Toggle Button for Mobile */}
+        <div className="lg:hidden flex items-center justify-between bg-slate-900 p-3 rounded-xl border border-slate-800">
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="flex items-center gap-2 text-xs font-semibold text-purple-300 bg-purple-600/10 border border-purple-500/30 px-3 py-2 rounded-lg"
+          >
+            <Menu className="w-4 h-4" />
+            <span>Question List ({questions.length})</span>
+          </button>
+          <span className="text-xs text-slate-400">
+            Q {currentIndex + 1} of {questions.length}
+          </span>
+        </div>
+
+        {/* SIDEBAR: Question Navigator (4 Columns Desktop) */}
+        <div className={`
+          lg:col-span-4 bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col h-[750px] overflow-hidden
+          fixed lg:relative inset-y-0 left-0 z-40 w-80 lg:w-auto transform transition-transform duration-300 ease-in-out
+          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}>
+          {/* Mobile Close Button */}
+          <div className="lg:hidden flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+            <span className="font-bold text-sm text-slate-200">Select Question</span>
+            <button onClick={() => setIsSidebarOpen(false)} className="text-slate-400 hover:text-white">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Search Box */}
+          <div className="relative mb-3">
+            <Search className="w-4 h-4 absolute left-3 top-3 text-slate-500" />
+            <input
+              type="text"
+              placeholder="Search in questions..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500 transition-all"
+            />
+          </div>
+
+          {/* Question List Scrollable */}
+          <div className="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+            {isLoading ? (
+              <div className="text-center py-10 text-xs text-slate-500 animate-pulse">Loading questions...</div>
+            ) : filteredQuestions.length === 0 ? (
+              <div className="text-center py-10 text-xs text-slate-500">No matching questions</div>
             ) : (
-              <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-12 text-center">
-                <div className="animate-pulse">
-                  <div className="w-24 h-24 bg-[#DEDED1]/30 rounded-full mx-auto mb-6 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-[#DEDED1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
+              questions.map((q, idx) => {
+                const originalIndex = questions.findIndex(orig => orig._id === q._id || orig.question === q.question);
+                const targetIdx = originalIndex !== -1 ? originalIndex : idx;
+                const isSelected = targetIdx === currentIndex;
+                const isLearned = learnedQuestions.includes(targetIdx);
+
+                if (searchQuery && !filteredQuestions.includes(q)) return null;
+
+                return (
+                  <div
+                    key={q._id || idx}
+                    onClick={() => {
+                      setCurrentIndex(targetIdx);
+                      setIsSidebarOpen(false);
+                    }}
+                    className={`p-3 rounded-xl cursor-pointer border transition-all duration-200 ${
+                      isSelected
+                        ? 'bg-purple-600/15 border-purple-500/50 text-white shadow-md'
+                        : 'bg-slate-950/60 border-slate-800/80 hover:bg-slate-950 text-slate-300 hover:border-slate-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <span className={`w-6 h-6 rounded-lg text-[11px] font-bold flex items-center justify-center flex-shrink-0 ${
+                          isSelected ? 'bg-purple-600 text-white' : 'bg-slate-800 text-slate-400'
+                        }`}>
+                          {targetIdx + 1}
+                        </span>
+                        <p className="text-xs font-semibold truncate leading-tight">
+                          {q.question}
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleLearned(targetIdx);
+                        }}
+                        className="text-slate-500 hover:text-emerald-400 transition-colors"
+                        title={isLearned ? "Marked as learned" : "Mark as learned"}
+                      >
+                        {isLearned ? (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400 fill-emerald-500/20" />
+                        ) : (
+                          <Circle className="w-4 h-4 text-slate-600" />
+                        )}
+                      </button>
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">Loading Questions</h3>
-                  <p className="text-gray-600">Please wait while we prepare your {formatCategoryName(category)} questions...</p>
-                </div>
-              </div>
+                );
+              })
             )}
           </div>
         </div>
+
+        {/* Mobile Drawer Overlay */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/60 z-30 lg:hidden backdrop-blur-sm"
+            onClick={() => setIsSidebarOpen(false)}
+          ></div>
+        )}
+
+        {/* MAIN QUESTION DISPLAY CARD (8 Columns Desktop) */}
+        <div className="lg:col-span-8 flex flex-col h-[750px]">
+          
+          {isLoading ? (
+            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-12 flex-1 flex flex-col items-center justify-center text-center">
+              <Sparkles className="w-10 h-10 text-purple-400 animate-spin mb-4" />
+              <h3 className="text-xl font-bold text-white mb-2">Preparing Questions</h3>
+              <p className="text-xs text-slate-400">Fetching {formatCategoryName(category)} interview content...</p>
+            </div>
+          ) : questions.length > 0 ? (
+            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 sm:p-8 flex-1 flex flex-col justify-between overflow-hidden shadow-2xl">
+              
+              {/* Question Header Controls */}
+              <div className="flex items-center justify-between border-b border-slate-800 pb-4 mb-6">
+                <div className="flex items-center gap-2">
+                  <span className={`text-xs font-bold px-3 py-1 rounded-full border ${currentAccents.bgTint}`}>
+                    Question {currentIndex + 1} of {questions.length}
+                  </span>
+                  {isCurrentLearned && (
+                    <span className="text-[11px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                      <CheckCircle className="w-3 h-3" /> Learned
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => toggleLearned(currentIndex)}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
+                      isCurrentLearned 
+                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40 hover:bg-emerald-500/30' 
+                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                    }`}
+                  >
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>{isCurrentLearned ? 'Learned' : 'Mark Learned'}</span>
+                  </button>
+
+                  <button
+                    onClick={() => copyToClipboard(questions[currentIndex].question, 'question')}
+                    title="Copy Question"
+                    className="p-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-slate-400 hover:text-white transition-all"
+                  >
+                    {copiedQuestion ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Scrollable Question & Answer Content */}
+              <div className="flex-1 overflow-y-auto pr-2 space-y-6 custom-scrollbar">
+                
+                {/* QUESTION STATEMENT */}
+                <div>
+                  <h3 className="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <HelpCircle className="w-4 h-4" />
+                    <span>Interview Question:</span>
+                  </h3>
+                  <div className="bg-gradient-to-r from-indigo-950/40 to-slate-950/60 border-l-4 border-indigo-500 rounded-2xl p-5 border border-slate-800/80 shadow-md">
+                    <h2 className="text-lg sm:text-xl font-bold text-white leading-relaxed">
+                      {questions[currentIndex].question}
+                    </h2>
+                  </div>
+                </div>
+
+                {/* DETAILED ANSWER SECTION */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4" />
+                      <span>Model Answer & Explanation:</span>
+                    </h3>
+
+                    <button
+                      onClick={() => copyToClipboard(questions[currentIndex].answer, 'answer')}
+                      className="text-xs text-slate-400 hover:text-white flex items-center gap-1 bg-slate-800/60 px-2.5 py-1 rounded-lg border border-slate-700/60 transition-all"
+                    >
+                      {copiedAnswer ? (
+                        <>
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <span className="text-emerald-400">Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span>Copy Answer</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  <div className="bg-slate-950 border border-slate-800/90 rounded-2xl p-6 shadow-inner text-slate-200 text-sm leading-relaxed whitespace-pre-line font-sans">
+                    {questions[currentIndex].answer}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Bottom Keyboard & Navigation Control Footer */}
+              <div className="pt-4 mt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <button
+                  onClick={prevQuestion}
+                  disabled={currentIndex === 0}
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed border border-slate-700 text-slate-200 transition-all"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  <span>Previous</span>
+                </button>
+
+                <div className="text-xs text-slate-500 font-mono hidden sm:block">
+                  Tip: Use <kbd className="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700 text-slate-300">←</kbd> <kbd className="bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700 text-slate-300">→</kbd> arrow keys to navigate
+                </div>
+
+                {currentIndex === questions.length - 1 ? (
+                  <button
+                    onClick={() => navigate('/home')}
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white shadow-lg shadow-emerald-500/20 transition-all transform hover:-translate-y-0.5"
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    <span>Complete Category</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={nextQuestion}
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-500 text-white shadow-lg shadow-purple-600/20 transition-all transform hover:-translate-y-0.5"
+                  >
+                    <span>Next Question</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+
+            </div>
+          ) : (
+            <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-12 flex-1 flex flex-col items-center justify-center text-center">
+              <HelpCircle className="w-12 h-12 text-slate-600 mb-4" />
+              <h3 className="text-xl font-bold text-white mb-2">No Questions Found</h3>
+              <p className="text-xs text-slate-400 mb-6">No questions available for category "{formatCategoryName(category)}".</p>
+              <Link
+                to="/home"
+                className="bg-purple-600 hover:bg-purple-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition-all"
+              >
+                Back to Home
+              </Link>
+            </div>
+          )}
+        </div>
+
       </div>
-      
-    </>
+
+      <Footer />
+    </div>
   );
 }
 
-export default CategoryPage;  
+export default CategoryPage;
