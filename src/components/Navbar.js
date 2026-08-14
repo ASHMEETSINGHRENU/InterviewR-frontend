@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { LogOut, Home, User, Menu, X, Contact, Info } from "lucide-react";
+import { LogOut, Home, User, Menu, X, Contact, Info, Code2 } from "lucide-react";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -87,6 +87,24 @@ const handleLogout = () => {
                     <span>Home</span>
                   </span>
                   {isActive("/home") && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></div>
+                  )}
+                </button>
+
+                {/* Coding Section Link */}
+                <button
+                  onClick={() => handleNavigation("/coding")}
+                  className={`relative px-4 py-2 rounded-xl transition-all duration-300 group ${
+                    isActive("/coding")
+                      ? "text-blue-600 bg-blue-50"
+                      : "text-gray-600 hover:text-blue-600 hover:bg-blue-50/50"
+                  }`}
+                >
+                  <span className="flex items-center space-x-2">
+                    <Code2 className="w-4 h-4" />
+                    <span>Coding</span>
+                  </span>
+                  {isActive("/coding") && (
                     <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-full"></div>
                   )}
                 </button>
@@ -239,6 +257,18 @@ const handleLogout = () => {
                 >
                   <Home className="w-4 h-4" />
                   <span className="text-sm font-medium">Home</span>
+                </button>
+
+                <button
+                  onClick={() => handleNavigation("/coding")}
+                  className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-all duration-300 ${
+                    isActive("/coding")
+                      ? "bg-blue-50 text-blue-600"
+                      : "text-gray-600 hover:bg-gray-50"
+                  }`}
+                >
+                  <Code2 className="w-4 h-4" />
+                  <span className="text-sm font-medium">Coding</span>
                 </button>
 
 

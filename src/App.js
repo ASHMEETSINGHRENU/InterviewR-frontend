@@ -10,6 +10,7 @@ import AdminUpload from "./pages/AdminUpload";
 import AdminLogin from "./pages/Admin_login";
 import Forms from "./pages/forms";
 import About from "./pages/about";
+import CodingPage from "./pages/CodingPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -35,6 +36,15 @@ function App() {
         />
 
         <Route
+          path="/coding"
+          element={
+            <ProtectedRoute>
+              <CodingPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/profile"
           element={
             <ProtectedRoute>
@@ -45,17 +55,14 @@ function App() {
         />
 
         <Route
-  path="/about"
-  element={
-    <ProtectedRoute>
-      <Navbar />
-      <About />
-    </ProtectedRoute>
-  }
-/>
-
-
-
+          path="/about"
+          element={
+            <ProtectedRoute>
+              <Navbar />
+              <About />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/forms"
